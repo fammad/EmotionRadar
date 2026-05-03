@@ -16,6 +16,9 @@ Multi-label emotion detection from text using supervised and unsupervised machin
 
 ## Folder structure
 data/raw/        
+
 data/processed/
+
 notebooks/
+
 report/
