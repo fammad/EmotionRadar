@@ -14,12 +14,8 @@ Multi-label emotion detection from text using supervised and unsupervised machin
 
 ## Folder structure
 
-emotion-radar/
-├── README.md
-├── .gitignore
-├── requirements.txt
-├── data/
-│   ├── raw/
-│   └── processed/
-├── notebooks/       
-└── report/
+## Folder structure
+data/raw/        
+data/processed/
+notebooks/
+report/
