@@ -22,3 +22,5 @@ data/processed/
 notebooks/
 
 report/
+
+_testing
