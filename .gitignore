@@ -220,6 +220,6 @@ __marimo__/
 
 .ipynb_checkpoints/
 .DS_Store
-*.pkl
+# *.pkl
 .vscode/
 .idea/
