@@ -3,10 +3,8 @@
 
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-report--style_notebook-F37626?logo=jupyter&logoColor=white)
 ![Dataset: GoEmotions](https://img.shields.io/badge/Dataset-GoEmotions_(58k)-4285F4?logo=google&logoColor=white)
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
-[![Issues welcome](https://img.shields.io/badge/Issues-welcome-brightgreen?logo=github)](https://github.com/fammad/EmotionRadar/issues)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb)
 
 ![EmotionRadar demo](assets/emotionradar_demo.gif)
 
@@ -103,6 +101,10 @@ The notebook is written to read **top to bottom as a report**, with code collaps
 ---
 
 ## Running it
+
+No install needed: [open the notebook in Colab](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb) and run all cells; it downloads GoEmotions and reproduces everything from scratch.
+
+Locally:
 
 ```bash
 git clone https://github.com/fammad/EmotionRadar.git
