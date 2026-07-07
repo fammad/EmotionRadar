@@ -1,9 +1,12 @@
 # Emotion Radar: Multi-Label Emotion Classification
 
 
-![Made with Python](https://img.shields.io/badge/Made%20with-Python-3776AB?logo=python&logoColor=white)
+![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-report--style_notebook-F37626?logo=jupyter&logoColor=white)
+![Dataset: GoEmotions](https://img.shields.io/badge/Dataset-GoEmotions_(58k)-4285F4?logo=google&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
+[![Issues welcome](https://img.shields.io/badge/Issues-welcome-brightgreen?logo=github)](https://github.com/fammad/EmotionRadar/issues)
 
 ![EmotionRadar demo](assets/emotionradar_demo.gif)
 
