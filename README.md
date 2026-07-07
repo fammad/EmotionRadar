@@ -1,14 +1,15 @@
-# Emotion Radar
+# Emotion Radar: Multi-Label Emotion Classification
+
 
 ![Made with Python](https://img.shields.io/badge/Made%20with-Python-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
 
-![EmotionRadar demo: seven typed sentences, one per emotion. The radar morphs to the model's probabilities while the panel shows the final decision and per-word contributions.](assets/emotionradar_demo.gif)
+![EmotionRadar demo](assets/emotionradar_demo.gif)
 
-Multi-label emotion classification on Reddit comments, built as the final project for **DM1590: Machine Learning for Media Technology** at KTH.
+Emotion Radar is a second opinion on the tone of written text. A moderator skimming hundreds of replies, or a writer checking a post before publishing, gets an instant read on all seven Ekman emotions at once plus the exact words that drove each call, instead of a black-box label.
 
-Emotion Radar reads a short piece of text and tags it with any of seven emotions at once, then shows *which words* drove each prediction. It pairs a working classifier with an honest investigation into where the approach breaks down and why.
+Under the hood: ~58k Reddit comments (GoEmotions) remapped to the 7 Ekman emotions, where a balanced logistic regression doubles the baseline's macro-F1 (0.25 to 0.51) while every prediction stays explainable down to the word level. The classifier is half the project; the other half is an honest investigation into where the approach breaks down and why.
 
 ```
 "I'm furious but also kind of relieved it's over."
@@ -20,7 +21,7 @@ Emotion Radar reads a short piece of text and tags it with any of seven emotions
 
 ## What this project actually is
 
-Most student ML projects stop at "we trained a model and got X% accuracy." This one does that, but the more interesting half is a question we set out to answer first:
+Training a model and reporting a score is the easy half. The more interesting half is a question we set out to answer first:
 
 **Do emotional comments naturally cluster by emotion, before any labels are involved?**
 
@@ -87,7 +88,8 @@ EmotionRadar/
 ├── data/
 │   ├── processed/         # train.csv, val.csv, test.csv (Ekman-remapped)
 │   └── models/            # nb_model.pkl, lr_model.pkl, tfidf.pkl
-├── report/
+├── assets/
+│   ├── emotionradar_demo.gif
 │   └── figures/           # generated plots
 ├── requirements.txt
 └── README.md
@@ -119,8 +121,8 @@ Then run all cells. On first run, if `data/processed/` is empty, the notebook do
 | Labels | 28 -> 7 Ekman emotions | multi-label; a comment can carry several |
 | Features | TF-IDF, 1-2 grams, 5k vocab | fit on train only, no leakage |
 | Reduction | TruncatedSVD (LSA) to 100 dims | 300-dim version kept as a control |
-| Unsupervised | K-Means (course) + DBSCAN (new) | t-SNE for visualization only |
-| Supervised | MultinomialNB (course) + LogReg balanced (new) | `OneVsRest`, tuned on validation |
+| Unsupervised | K-Means + DBSCAN | two independent algorithms; t-SNE for visualization only |
+| Supervised | MultinomialNB baseline + LogReg (balanced) | `OneVsRest`, tuned on validation |
 | Evaluation | macro/micro-F1, ROC-AUC, per-emotion confusion, length stratification, error analysis | macro-F1 as the headline metric |
 
 A note on t-SNE: it is used purely to project the embeddings to 2-D for plotting. It is not a clustering method and feeds nothing downstream.
@@ -143,6 +145,12 @@ A note on t-SNE: it is used purely to project the embeddings to 2-D for plotting
 
 ---
 
+## Use it, break it, tell me
+
+If something doesn't run, or you see a better way to do any of this (the improvement list above is a starting point, not a fence), [open an issue](https://github.com/fammad/EmotionRadar/issues). Disagreements about the interpretability trade-off are welcome too. I'd rather hear the argument than not.
+
+---
+
 ## References
 
 - Demszky, D., Movshovitz-Attias, D., Ko, J., Cowen, A., Nemade, G., & Ravi, S. (2020). *GoEmotions: A Dataset of Fine-Grained Emotions.* ACL 2020.
@@ -159,3 +167,10 @@ Submitted as the final project for DM1590 (Machine Learning for Media Technology
 ## Team
 
 Group 15, DM1590, KTH Royal Institute of Technology: Fuad Mammadov, Qingya Li, Xinyutong Zhang, Jintong Jiang.
+
+## Credits & contact
+
+Licensed under MIT. If you build on this or reuse parts of it, a credit or link back is appreciated but not required.
+
+**Fuad Mammadov**
+[fammad.com](https://fammad.com/work/emotionradar) · [LinkedIn](https://www.linkedin.com/in/fammad/)
