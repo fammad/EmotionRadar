@@ -1,16 +1,19 @@
 # Emotion Radar: Multi-Label Emotion Classification
 
 
-![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
-![Dataset: GoEmotions](https://img.shields.io/badge/Dataset-GoEmotions_(58k)-4285F4?logo=google&logoColor=white)
+[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Dataset: GoEmotions](https://img.shields.io/badge/Dataset-GoEmotions_(58k)-4285F4?logo=google&logoColor=white)](https://huggingface.co/datasets/google-research-datasets/go_emotions)
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb)
 
 ![EmotionRadar demo](assets/emotionradar_demo.gif)
 
-Emotion Radar is a second opinion on the tone of written text. A moderator skimming hundreds of replies, or a writer checking a post before publishing, gets an instant read on all seven Ekman emotions at once plus the exact words that drove each call, instead of a black-box label.
+> **Run this yourself, right now:** [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb)
+> One click, no install. The notebook downloads the data, trains both models, and reproduces every number and figure in this README. Change `INPUT_TEXT` in Section 6 to test your own sentences.
 
-Under the hood: ~58k Reddit comments (GoEmotions) remapped to the 7 Ekman emotions, where a balanced logistic regression doubles the baseline's macro-F1 (0.25 to 0.51) while every prediction stays explainable down to the word level. The classifier is half the project; the other half is an honest investigation into where the approach breaks down and why.
+Emotion Radar tags short text with any of the seven Ekman emotions at once (multi-label, so a comment can be angry and relieved at the same time) and shows which words pushed each prediction. We built it for reading user-generated text at scale, where you want the evidence, not just the label.
+
+The model is a class-balanced one-vs-rest logistic regression over TF-IDF, trained on ~58k Reddit comments from GoEmotions. It doubles the Naive Bayes baseline's macro-F1 (0.25 to 0.51), and every prediction traces back to actual words. There's also a negative result in here: emotions don't cluster in TF-IDF space. We show that three different ways.
 
 ```
 "I'm furious but also kind of relieved it's over."
@@ -20,16 +23,12 @@ Under the hood: ~58k Reddit comments (GoEmotions) remapped to the 7 Ekman emotio
 
 ---
 
-## What this project actually is
+## Overview
 
-Training a model and reporting a score is the easy half. The more interesting half is a question we set out to answer first:
+The project answers two questions, in order:
 
-**Do emotional comments naturally cluster by emotion, before any labels are involved?**
-
-The answer turned out to be no, and proving *that* cleanly took more thought than the classifier did. The project is organised around two complementary halves:
-
-1. **Unsupervised** (run first): can structure emerge on its own? We test this with K-Means and DBSCAN on a TF-IDF/LSA representation, and treat the result as a finding to be defended rather than a number to be maximised.
-2. **Supervised**: given labels, how well can we actually predict the seven emotions? We compare a Naive Bayes baseline against a balanced logistic regression, and evaluate the winner from several angles.
+1. **Unsupervised:** do emotional comments cluster by emotion before any labels get involved? We tested with K-Means and DBSCAN on a TF-IDF/LSA representation. They don't, and we treat that as a finding worth defending, not a number to fix.
+2. **Supervised:** with labels, how well can the seven emotions actually be predicted? Naive Bayes as the baseline, class-balanced logistic regression as the contender, judged per emotion instead of one aggregate score.
 
 The dataset is [GoEmotions](https://github.com/google-research/google-research/tree/master/goemotions) (Demszky et al., 2020), ~58k Reddit comments. Its 28 fine-grained labels are remapped to the 7 [Ekman basic emotions](https://en.wikipedia.org/wiki/Emotion_classification#Basic_emotions) (anger, disgust, fear, joy, sadness, surprise, neutral) for more samples per class and cleaner interpretation.
 
@@ -69,9 +68,9 @@ The conclusion is that the limitation lives in the *representation*. Bag-of-word
 
 ---
 
-## Why TF-IDF instead of modern embeddings?
+## Design choice: TF-IDF over embeddings
 
-A reasonable question, since sentence embeddings (e.g. Sentence-BERT) would almost certainly cluster better. The choice was deliberate: TF-IDF features *are individual words*, so the logistic regression coefficients map directly back to vocabulary. That is what powers the word-level explanations in the demo. We traded raw performance for interpretability, on purpose, and the report names this as a trade-off rather than hiding it. The "What I'd build next" section lays out the embedding-based version as the natural next step.
+Sentence embeddings (e.g. Sentence-BERT) would almost certainly cluster better and score higher. We picked TF-IDF anyway, because its features *are individual words*: the logistic regression coefficients map straight back to vocabulary, which is what makes the word-level attribution in the demo possible. That's a deliberate trade of raw performance for interpretability, and the report treats it as one. The embedding version is the obvious next step, listed under future work.
 
 ---
 
@@ -142,7 +141,7 @@ A note on t-SNE: it is used purely to project the embeddings to 2-D for plotting
 
 ---
 
-## How can we improve this?
+## Future work
 
 - Per-emotion decision thresholds tuned on validation, instead of a shared 0.5.
 - A Sentence-BERT pipeline to measure exactly how much clustering and accuracy improve once interpretability is traded away.
@@ -150,9 +149,9 @@ A note on t-SNE: it is used purely to project the embeddings to 2-D for plotting
 
 ---
 
-## Use it, break it, tell me
+## Issues & improvements
 
-If something doesn't run, or you see a better way to do any of this (the improvement list above is a starting point, not a fence), [open an issue](https://github.com/fammad/EmotionRadar/issues). Disagreements about the interpretability trade-off are welcome too. I'd rather hear the argument than not.
+If something doesn't run, or you see a better way to do any part of this, [open an issue](https://github.com/fammad/EmotionRadar/issues). The future-work list is a starting point, not a boundary. And if you think trading accuracy for interpretability was the wrong call, open an issue for that too.
 
 ---
 
