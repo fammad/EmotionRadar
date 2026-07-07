@@ -1,19 +1,17 @@
 # Emotion Radar: Multi-Label Emotion Classification
 
 
-[![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![Dataset: GoEmotions](https://img.shields.io/badge/Dataset-GoEmotions_(58k)-4285F4?logo=google&logoColor=white)](https://huggingface.co/datasets/google-research-datasets/go_emotions)
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb)
 
 ![EmotionRadar demo](assets/emotionradar_demo.gif)
 
-> **Run this yourself, right now:** [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb)
+> **Run this yourself.** [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb)
 > One click, no install. The notebook downloads the data, trains both models, and reproduces every number and figure in this README. Change `INPUT_TEXT` in Section 6 to test your own sentences.
 
 Emotion Radar tags short text with any of the seven Ekman emotions at once (multi-label, so a comment can be angry and relieved at the same time) and shows which words pushed each prediction. We built it for reading user-generated text at scale, where you want the evidence, not just the label.
 
-The model is a class-balanced one-vs-rest logistic regression over TF-IDF, trained on ~58k Reddit comments from GoEmotions. It doubles the Naive Bayes baseline's macro-F1 (0.25 to 0.51), and every prediction traces back to actual words. There's also a negative result in here: emotions don't cluster in TF-IDF space. We show that three different ways.
+The model is a class-balanced one-vs-rest logistic regression over TF-IDF, trained on ~58k Reddit comments from GoEmotions. It doubles the Naive Bayes baseline's macro-F1 (0.25 to 0.51), and every prediction traces back to actual words. The repo also holds a negative result. Emotions don't cluster in TF-IDF space, and we show that three different ways.
 
 ```
 "I'm furious but also kind of relieved it's over."
@@ -62,15 +60,15 @@ Three independent checks agree that emotions do **not** form natural groups in T
 
 ![t-SNE comparison](assets/figures/tsne_comparison.png)
 
-Alongside these, K-Means at k=7 gives a silhouette of ≈ 0.05 with ARI ≈ 0 and NMI ≈ 0.05, and one cluster absorbs most of the data. A 300-dimension control rules out aggressive dimensionality reduction as the cause: tripling the retained variance barely moves the silhouette.
+Alongside these, K-Means at k=7 gives a silhouette of ≈ 0.05 with ARI ≈ 0 and NMI ≈ 0.05, and one cluster absorbs most of the data. A 300-dimension control rules out aggressive dimensionality reduction as the cause, since tripling the retained variance barely moves the silhouette.
 
-The conclusion is that the limitation lives in the *representation*. Bag-of-words TF-IDF encodes which words appear, not what they mean, so two angry comments with no shared vocabulary sit as far apart as an angry one and a happy one. This is the kind of result that is easy to mistake for a bug; the project's contribution is showing, with evidence, that it is a real property of the feature space.
+The conclusion is that the limitation lives in the *representation*. Bag-of-words TF-IDF encodes which words appear, not what they mean, so two angry comments with no shared vocabulary sit as far apart as an angry one and a happy one. It would be easy to mistake this result for a bug. The project's contribution is showing, with evidence, that it is a real property of the feature space.
 
 ---
 
-## Design choice: TF-IDF over embeddings
+## Why TF-IDF and not embeddings
 
-Sentence embeddings (e.g. Sentence-BERT) would almost certainly cluster better and score higher. We picked TF-IDF anyway, because its features *are individual words*: the logistic regression coefficients map straight back to vocabulary, which is what makes the word-level attribution in the demo possible. That's a deliberate trade of raw performance for interpretability, and the report treats it as one. The embedding version is the obvious next step, listed under future work.
+Sentence embeddings (e.g. Sentence-BERT) would almost certainly cluster better and score higher. We picked TF-IDF anyway, because its features *are individual words*. Each logistic regression coefficient maps straight back to a word in the vocabulary, and that is what makes the attribution in the demo possible. We knowingly traded raw performance for interpretability, and the report treats it as a trade, not a footnote. The embedding version is the obvious next step, listed under future work.
 
 ---
 
@@ -101,9 +99,9 @@ The notebook is written to read **top to bottom as a report**, with code collaps
 
 ## Running it
 
-No install needed: [open the notebook in Colab](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb) and run all cells; it downloads GoEmotions and reproduces everything from scratch.
+The fastest way is [Colab](https://colab.research.google.com/github/fammad/EmotionRadar/blob/main/EmotionRadar_Report.ipynb). Open the notebook, run all cells, and it downloads GoEmotions and reproduces everything from scratch. Nothing to install.
 
-Locally:
+To run it locally instead:
 
 ```bash
 git clone https://github.com/fammad/EmotionRadar.git
@@ -129,13 +127,13 @@ Then run all cells. On first run, if `data/processed/` is empty, the notebook do
 | Supervised | MultinomialNB baseline + LogReg (balanced) | `OneVsRest`, tuned on validation |
 | Evaluation | macro/micro-F1, ROC-AUC, per-emotion confusion, length stratification, error analysis | macro-F1 as the headline metric |
 
-A note on t-SNE: it is used purely to project the embeddings to 2-D for plotting. It is not a clustering method and feeds nothing downstream.
+t-SNE only projects the embeddings to 2-D for plotting. It is not a clustering method and feeds nothing downstream.
 
 ---
 
 ## Reproducibility
 
-- A single fixed seed (`RANDOM_STATE = 42`) governs every stochastic step: the split, K-Means initialisation, t-SNE, and sampling.
+- A single fixed seed (`RANDOM_STATE = 42`) governs every stochastic step, from the split through K-Means initialisation, t-SNE, and sampling.
 - The TF-IDF vectoriser is fit on training data only; validation and test reuse the same vocabulary.
 - Trained models and the fitted vectoriser are saved to `data/models/` so results can be reloaded without retraining.
 
