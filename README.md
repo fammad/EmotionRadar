@@ -1,5 +1,11 @@
 # Emotion Radar
 
+![Made with Python](https://img.shields.io/badge/Made%20with-Python-3776AB?logo=python&logoColor=white)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikit-learn&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow)
+
+![EmotionRadar demo: seven typed sentences, one per emotion. The radar morphs to the model's probabilities while the panel shows the final decision and per-word contributions.](assets/emotionradar_demo.gif)
+
 Multi-label emotion classification on Reddit comments, built as the final project for **DM1590: Machine Learning for Media Technology** at KTH.
 
 Emotion Radar reads a short piece of text and tags it with any of seven emotions at once, then shows *which words* drove each prediction. It pairs a working classifier with an honest investigation into where the approach breaks down and why.
@@ -25,7 +31,7 @@ The answer turned out to be no, and proving *that* cleanly took more thought tha
 
 The dataset is [GoEmotions](https://github.com/google-research/google-research/tree/master/goemotions) (Demszky et al., 2020), ~58k Reddit comments. Its 28 fine-grained labels are remapped to the 7 [Ekman basic emotions](https://en.wikipedia.org/wiki/Emotion_classification#Basic_emotions) (anger, disgust, fear, joy, sadness, surprise, neutral) for more samples per class and cleaner interpretation.
 
-![Pipeline diagram](report/figures/pipeline.png)
+![Pipeline diagram](assets/figures/pipeline.png)
 
 ---
 
@@ -49,11 +55,11 @@ Three independent checks agree that emotions do **not** form natural groups in T
 
 **DBSCAN eps sweep.** There is no setting that produces several balanced clusters. Small `eps` labels nearly everything as noise; large `eps` collapses everything into one blob. The two lines cross with no healthy middle ground.
 
-![DBSCAN eps sweep](report/figures/dbscan_eps_sweep.png)
+![DBSCAN eps sweep](assets/figures/dbscan_eps_sweep.png)
 
 **t-SNE projection.** Coloured by true emotion (right panel), the points are a uniform mix with no separated regions. This is the visual confirmation of the same result.
 
-![t-SNE comparison](report/figures/tsne_comparison.png)
+![t-SNE comparison](assets/figures/tsne_comparison.png)
 
 Alongside these, K-Means at k=7 gives a silhouette of ≈ 0.05 with ARI ≈ 0 and NMI ≈ 0.05, and one cluster absorbs most of the data. A 300-dimension control rules out aggressive dimensionality reduction as the cause: tripling the retained variance barely moves the silhouette.
 
@@ -69,7 +75,7 @@ A reasonable question, since sentence embeddings (e.g. Sentence-BERT) would almo
 
 ## More figures
 
-The notebook produces the full set of evaluation plots (label distribution, K-Means model selection, per-emotion F1, confusion matrices, F1 by text length, error patterns, and top contributing words per emotion). Running it regenerates them all in `report/figures/`.
+The notebook produces the full set of evaluation plots (label distribution, K-Means model selection, per-emotion F1, confusion matrices, F1 by text length, error patterns, and top contributing words per emotion). Running it regenerates them all in `assets/figures/`.
 
 ---
 
@@ -77,7 +83,7 @@ The notebook produces the full set of evaluation plots (label distribution, K-Me
 
 ```
 EmotionRadar/
-├── EmotionRadar_Report_DM1590_Group15.ipynb   # main deliverable: report + collapsible code
+├── EmotionRadar_Report.ipynb   # main deliverable: report + collapsible code
 ├── data/
 │   ├── processed/         # train.csv, val.csv, test.csv (Ekman-remapped)
 │   └── models/            # nb_model.pkl, lr_model.pkl, tfidf.pkl
@@ -97,10 +103,10 @@ The notebook is written to read **top to bottom as a report**, with code collaps
 git clone https://github.com/fammad/EmotionRadar.git
 cd EmotionRadar
 pip install -r requirements.txt
-jupyter lab EmotionRadar_Report_DM1590_Group15.ipynb
+jupyter lab EmotionRadar_Report.ipynb
 ```
 
-Then run all cells. On first run, if `data/processed/` is empty, the notebook downloads GoEmotions from HuggingFace and rebuilds the splits automatically; afterwards it loads the cached CSVs. Running the notebook regenerates every figure in `report/figures/`.
+Then run all cells. On first run, if `data/processed/` is empty, the notebook downloads GoEmotions from HuggingFace and rebuilds the splits automatically; afterwards it loads the cached CSVs. Running the notebook regenerates every figure in `assets/figures/`.
 
 **Core dependencies:** `scikit-learn`, `nltk`, `numpy`, `pandas`, `matplotlib`, `seaborn`, `datasets`.
 
@@ -146,8 +152,10 @@ A note on t-SNE: it is used purely to project the embeddings to 2-D for plotting
 
 ---
 
+## Status
+
+Submitted as the final project for DM1590 (Machine Learning for Media Technology) at KTH, May 2025, and graded **A** on a rubric covering supervised application, unsupervised application, evaluation, and presentation.
+
 ## Team
 
-Group 15, DM1590, KTH Royal Institute of Technology: Fuad Mammadov, Qingya Li, Xinyutong Zhang, Jintong Jiang. May 2025.
-
-*Project graded against an A-F rubric covering supervised application, unsupervised application, evaluation, and presentation.*
+Group 15, DM1590, KTH Royal Institute of Technology: Fuad Mammadov, Qingya Li, Xinyutong Zhang, Jintong Jiang.
